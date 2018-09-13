@@ -1,9 +1,9 @@
 const express = require('express')
-
+const jwt = require('jsonwebtoken')
 const router =express.Router()
 const User =require('../models/user')
-
 const mongoose = require('mongoose')
+
 const dbConnStr= "mongodb://OyewoleOni:OPENsesami1910@ds155352.mlab.com:55352/eventsbd"
 
 mongoose.connect(dbConnStr,err =>{
@@ -24,7 +24,10 @@ router.post('/register', (req,res)=>{
         if(error) {
             console.log(error)
         } else{
-            res.status(200).send(registeredUser)
+            let payLoad = {subject: registeredUser._id}
+            let tokken=jwt.sign(payLoad, 'secretKey')
+            //res.status(200).send(registeredUser)
+            res.status(200).send({tokken})
         }
 
     })
@@ -43,7 +46,10 @@ router.post('/login',(req,res)=>{
             if(user.password !== loginData.password){
                 res.status(401).send('invalid password')
             }else{
-                res.status(200).send(user)
+                let payLoad = {subject: user._id}
+                let token = jwt.sign(payLoad, 'secretKey')
+                //res.status(200).send(user)
+                res.status(200).send({token})
             }
         }
     })
@@ -76,6 +82,18 @@ router.get('/events',(req,res)=>{
             "description":"lorem ipsum",
             "date":"2018-09-23T18:15:43.511z"
         },
+        {
+            "_id":"5",
+            "name":"Auto Expo",
+            "description":"lorem ipsum",
+            "date":"2018-09-23T18:15:43.511z"
+        },
+        {
+            "_id":"6",
+            "name":"Auto Expo",
+            "description":"lorem ipsum",
+            "date":"2018-09-23T18:15:43.511z"
+        },
     ]
     res.json(events)
 })
@@ -103,6 +121,18 @@ router.get('/special',(req,res)=>{
         },
         {
             "_id":"4",
+            "name":"Auto Expo",
+            "description":"lorem ipsum",
+            "date":"2018-09-23T18:15:43.511z"
+        },
+        {
+            "_id":"5",
+            "name":"Auto Expo",
+            "description":"lorem ipsum",
+            "date":"2018-09-23T18:15:43.511z"
+        },
+        {
+            "_id":"6",
             "name":"Auto Expo",
             "description":"lorem ipsum",
             "date":"2018-09-23T18:15:43.511z"
